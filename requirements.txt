@@ -1,0 +1,14 @@
+flask
+flask_wtf
+pandas
+requests
+mysql-connector-python
+flask_mail
+Werkzeug==2.2.2
+itsdangerous
+secure-smtplib
+bcrypt
+pandas
+stripe
+PrettyTable
+datetime
