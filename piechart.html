@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pie Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<canvas id="myChart" width="400" height="400"></canvas>
+
+<script>
+    // Sample data
+    var data = {
+        "root": [
+            {
+            "measure": "Promotion rate",
+            "result": "Total Promoted,Percentage;10,22.22%"
+        },
+        {
+            "measure": "Should be promoted",
+            "result": "Percentage;0.00%"
+        },
+        {
+            "measure": "Incentive type",
+            "result": "Incentive Type,Number of Employees,Percentage;overtime,35,77.78%;target,8,17.78%"
+        },
+        {
+            "measure": "Incentive payout",
+            "result": "Incentive Pay Out,Number of Employees,Percentage;Annually,10,22.22%;Monthly,18,40.00%;Quarterly,15,33.33%"
+        },
+        {
+            "measure": "Overtime per employee",
+            "result": "Year,Month,Number of Hours;2021,12,1.4;2022,12,1.4"
+        },
+        {
+            "measure": "Overtime pay",
+            "result": "Year,Month,Number of Hours;2021,12,462;2022,12,504"
+        }
+        ]
+    };
+
+    // Extracting data for the 'Incentive type' measure
+    var incentiveData = data.root.find(item => item.measure === 'Incentive type').result;
+    var parsedData = incentiveData.split(';').slice(1); // Remove header
+
+    var labels = parsedData.map(item => item.split(',')[0]);
+    var percentages = parsedData.map(item => parseFloat(item.split(',')[2]));
+
+    // Creating the pie chart
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Incentive Type Percentage',
+                data: percentages,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+</script>
+
+</body>
+</html>

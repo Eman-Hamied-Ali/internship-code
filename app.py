@@ -69,6 +69,10 @@ def analyze_company_data():
     username = ''
     token = session.get('token')
     table = ''
+    charts_data = []
+
+    print(session.get("token"))
+    print(session.get("username"), "username")
     if session.get('token') == None:
         return redirect(url_for('sign_in'))
     elif session.get('username') == None:
@@ -97,7 +101,6 @@ def analyze_company_data():
             #the API request
             r = requests.post(url="https://opus-backend.azurewebsites.net/upload", headers={'Authorization': bearer_token}, data={'primary_key':primary_key,'uploader':token,'measure':measure},files=files)
             if r.status_code == 200:
-
                 #getting results from JSON Object
                 for item in r.json().get("root", []):
                     measure = item.get("measure", "")
@@ -112,7 +115,19 @@ def analyze_company_data():
 
                     #get the rest of the result
                     values = result.split(";")[1:]
+                    print(labels, values, measure, "measure")
                     if len(values) > 0:
+                        chart_data = []
+                        for i in values:
+                            row_data = i.split(",")
+                            data_point = {label: value for label, value in zip(labels, row_data)}
+                            chart_data.append(data_point)
+
+                        charts_data.append({
+                            "measure": measure,
+                            "data": chart_data
+                        })
+
                         myTable = PrettyTable(labels)
 
                         #adding the measure as a title to the table
@@ -142,7 +157,7 @@ def analyze_company_data():
                     os.remove(os.path.join(app.config['UPLOAD_FOLDER'], file_name))
                 return response
     #returning table to HTML to be represented 
-    return (render_template("account-form-upload.html",table= table,tag=tag,username=username,type=type))
+    return (render_template("account-form-upload.html",table= table,tag=tag,username=username,type=type,charts=charts_data))
 
 
 
